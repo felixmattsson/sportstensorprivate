@@ -87,13 +87,8 @@ async def make_match_prediction(prediction: MatchPrediction):
     league_class = league_classes.get(league_enum)
     sport_class = sport_classes.get(prediction.sport)
 
-    # Check if we have a base prediction model first
-    if base_class:
-        bt.logging.info("Using base prediction model.")
-        base_prediction = base_class(prediction)
-        await base_prediction.make_prediction()
     # Check if we have a league-specific prediction model first
-    elif league_class:
+    if getattr(league_class, "implemented", False):
         bt.logging.info(
             f"Using league-specific prediction model: {league_class.__name__}"
         )
@@ -101,13 +96,20 @@ async def make_match_prediction(prediction: MatchPrediction):
         league_prediction.set_default_probability()
         await league_prediction.make_prediction()
     # If not, check if we have a sport-specific prediction model
-    elif sport_class:
+    elif getattr(sport_class, "implemented", False):
         bt.logging.info(
             f"Using sport-specific prediction model: {sport_class.__name__}"
         )
         sport_prediction = sport_class(prediction)
         sport_prediction.set_default_probability()
         await sport_prediction.make_prediction()
+
+        # Check if we have a base prediction model
+    elif getattr(base_class, "implemented", False):
+        bt.logging.info("Using base prediction model.")
+        base_prediction = base_class(prediction)
+        await base_prediction.make_prediction()
+        
     # If we don't have a prediction model for the sport, return 0 for both scores
     else:
         bt.logging.info("Unknown sport, returning default probability.")

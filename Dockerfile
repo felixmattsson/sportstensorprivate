@@ -9,8 +9,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 #----- OS dependencies -----#
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends \
-        build-essential git curl pkg-config libssl-dev \
+        build-essential git curl pkg-config libssl-dev nodejs npm \
     && rm -rf /var/lib/apt/lists/*
+
+# Install pm2 globally and show output
+RUN npm install -g pm2 && pm2 --version
+
 
 #----- Rust (for bittensor native deps) -----#
 ENV RUSTUP_HOME=/usr/local/rustup \
@@ -27,8 +31,12 @@ RUN pip install --no-cache-dir pipx && pipx install uv
 WORKDIR /app
 COPY . .
 
+
 # Create dedicated virtualenv and install deps via uv inside it
 RUN /usr/local/bin/uv pip install --system -r requirements.txt
+
+# Copy example env to actual env file
+RUN cp neurons/example.miner.env neurons/miner.env
 
 #----- Non-root execution -----#
 RUN groupadd -g 1000 app && useradd -m -u 1000 -g app appuser
@@ -46,4 +54,4 @@ USER appuser
 EXPOSE 8091
 
 # Entrypoint (override in compose)
-CMD ["python", "neurons/validator.py", "--data-dir", "/data"] 
+CMD ["python", "neurons/miner.py", "--data-dir", "/data"] 

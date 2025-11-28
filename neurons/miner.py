@@ -44,6 +44,7 @@ class Miner(BaseMinerNeuron):
     def load_league_commitments(self):
         load_dotenv(dotenv_path=MINER_ENV_PATH, override=True)
         league_commitments = os.getenv("LEAGUE_COMMITMENTS")
+        print(league_commitments)
         leagues_list = league_commitments.split(",")
         
         leagues = []

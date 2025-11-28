@@ -73,6 +73,8 @@ league_mapping = {
 }
 
 class SportstensorBaseModel(SportPredictionModel):
+    implemented = True
+    
     def __init__(self, prediction: MatchPrediction):
         super().__init__(prediction)
         self.boost_min_percent = 0.03
@@ -232,6 +234,9 @@ class SportstensorBaseModel(SportPredictionModel):
                             self.prediction.probabilityChoice = ProbabilityChoice.AWAYTEAM
                         else:
                             self.prediction.probabilityChoice = ProbabilityChoice.DRAW
+
+                        #this is where the Felix special magic happens:
+                        max_prob = max_prob*1.04
 
                         self.prediction.probability = max_prob
                         bt.logging.info(f"Prediction made: {self.prediction.probabilityChoice} with probability {self.prediction.probability}")

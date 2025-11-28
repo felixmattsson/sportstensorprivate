@@ -89,20 +89,12 @@ async def nba():
     matchDate = "2025-02-20"
     match_predictions = [
         MatchPrediction(
-            matchId="d1fc26857f2ac88f58cb3b601c9dd88c",
+            matchId="bbde7751a144b98ed150d7a5f7dc8f87",
             matchDate=dt.datetime.strptime(matchDate, "%Y-%m-%d"),
             sport=Sport.BASKETBALL,
             league=League.NBA,
-            homeTeamName="San Antonio Spurs",
-            awayTeamName="Phoenix Suns",
-        ),
-        MatchPrediction(
-            matchId="e6a39ecdde1417e008fed58878a66a55",
-            matchDate=dt.datetime.strptime(matchDate, "%Y-%m-%d"),
-            sport=Sport.BASKETBALL,
-            league=League.NBA,
-            homeTeamName="Portland Trail Blazers",
-            awayTeamName="Los Angeles Lakers",
+            homeTeamName="Oklahoma City Thunder",
+            awayTeamName="Houston Rockets",
         ),
     ]
     for match_prediction in match_predictions:
